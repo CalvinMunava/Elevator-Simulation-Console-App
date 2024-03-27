@@ -45,7 +45,6 @@ namespace elevator_app
                 {
                     Console.WriteLine("Authentication failed. Exiting...");
                 }
-
             }
             catch (Exception ex)
             {
@@ -209,10 +208,38 @@ namespace elevator_app
                 Console.Clear();
                 DisplayCommandKey();
             }
-            if (userInput.ToLower() == "status")
+            else if (userInput.ToLower() == "status")
             {
                 Console.Clear();
                 DisplayElevatorStatus();
+            }
+            else if (userInput.ToLower().StartsWith("call"))
+            {
+                // Split the user input by spaces to separate the command and its arguments
+                string[] inputParts = userInput.Split(' ');
+
+                // Check if the input has the correct number of parts and if it starts with the correct command
+                if (inputParts.Length == 3 && inputParts[0].Trim().Equals("call", StringComparison.OrdinalIgnoreCase) &&
+                    inputParts[1].Trim().Equals("-", StringComparison.OrdinalIgnoreCase))
+                {
+                    // Extract floor and passengers from the input
+                    string[] argumentParts = inputParts[2].Split(':');
+                    if (argumentParts.Length == 2 && int.TryParse(argumentParts[0], out int floor) && int.TryParse(argumentParts[1], out int passengers))
+                    {
+                        // Call an elevator to the specified floor
+                        Console.WriteLine($"Calling Nearest Elevator to floor {floor}.");
+                        elevatorManager.CallElevator(floor, passengers);
+                        DisplayElevatorStatus();
+                    }
+                    else
+                    {
+                        Console.WriteLine("Invalid floor or passengers specified.");
+                    }
+                }
+                else
+                {
+                    Console.WriteLine("Invalid command format. Please use 'call - [floor]:[passengers]'.");
+                }
             }
             else if (userInput.ToLower() == "exit")
             {
@@ -223,8 +250,6 @@ namespace elevator_app
             {
                 Console.WriteLine("Invalid command. Type 'help' to see available commands.");
             }
-
-
         }
 
         // Display Elevator Status 

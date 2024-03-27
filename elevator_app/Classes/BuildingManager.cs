@@ -48,6 +48,9 @@ namespace elevator_app.Classes
             {
                 Console.WriteLine($"Elevator {nearestElevator.ElevatorNumber} called to floor {floor}");
                 nearestElevator.AddTo(floor, numPassengers);
+                nearestElevator.LogMovement = true;
+                nearestElevator.MoveTo(floor); // Move the elevator to the called floor
+                nearestElevator.AddTo(numPassengers, floor); // Reversed the parameters
             }
             else
             {

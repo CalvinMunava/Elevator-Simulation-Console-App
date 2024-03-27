@@ -25,9 +25,9 @@ namespace elevator_app.Classes
 
         // Parameterless Constructor
         public Elevator()
-            {
+        {
 
-            }
+        }
             
         // Parametered Constructor
         public Elevator(int elevatorNumber, int initialFloor, bool isMoving, Direction direction, int currentCapacity, int maxCapacity, bool logMovement,int destinationFloor)
