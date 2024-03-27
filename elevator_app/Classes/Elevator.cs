@@ -13,12 +13,13 @@ namespace elevator_app.Classes
         // Properties  
 
         public int ElevatorNumber { get; private set; }
-        public int CurrentFloor { get; private set; }
+        public int CurrentFloor { get; private set; } = 1;
         public Direction Direction { get; private set; } = Direction.stationary;
-        public bool IsMoving { get; private set; }
+        public bool IsMoving { get; private set; } = false;
         public int CurrentCapacity { get; set; } = 0;
         public int MaxCapacity { get; set; }
         public bool LogMovement { get; set; } = false;
+        public int DestinationFloor { get; set; } = -1; // No intial Destination
 
         // Default Constructors 
 
@@ -29,15 +30,16 @@ namespace elevator_app.Classes
             }
             
         // Parametered Constructor
-        public Elevator(int elevatorNumber, int initialFloor, bool isMoving, Direction direction, int currentCapacity, int maxCapacity, bool logMovement)
+        public Elevator(int elevatorNumber, int initialFloor, bool isMoving, Direction direction, int currentCapacity, int maxCapacity, bool logMovement,int destinationFloor)
             {
                 ElevatorNumber = elevatorNumber;
                 CurrentFloor = initialFloor;
-                Direction = Direction.stationary;
+                Direction = direction;
                 IsMoving = isMoving;
                 CurrentCapacity = currentCapacity;
                 MaxCapacity = maxCapacity;
                 LogMovement = logMovement;
+                DestinationFloor = destinationFloor;
             }
 
 
@@ -86,7 +88,7 @@ namespace elevator_app.Classes
         }
 
         // Add passengers to the elevator
-        public abstract void AddTo(int count);
+        public abstract void AddTo(int count, int destinationFloor);
 
         // Remove passengers from the elevator
         public abstract void RemoveFrom(int count);
