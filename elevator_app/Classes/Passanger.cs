@@ -34,7 +34,12 @@ namespace elevator_app.Classes
                 // Set destination After adding
                 this.DestinationFloor = destinationFloor;
 
-                if(CurrentFloor != DestinationFloor) { 
+
+                // Add the new destination floor to the elevator
+                AddDestinationFloor(destinationFloor);
+
+
+                if (CurrentFloor != DestinationFloor) { 
                 
                     MoveTo(DestinationFloor); // Move elevator to destination floor
                 }

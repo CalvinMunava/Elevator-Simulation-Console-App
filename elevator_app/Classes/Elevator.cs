@@ -21,6 +21,8 @@ namespace elevator_app.Classes
         public bool LogMovement { get; set; } = false;
         public int DestinationFloor { get; set; } = -1; // No intial Destination
 
+        protected List<int> destinationFloors = new List<int>();
+
         // Default Constructors 
 
         // Parameterless Constructor
@@ -92,11 +94,61 @@ namespace elevator_app.Classes
                 Console.WriteLine($"Elevator {ElevatorNumber} has arrived at floor {CurrentFloor}.");
         }
 
+
         // Add passengers to the elevator
         public abstract void AddTo(int count, int destinationFloor);
 
         // Remove passengers from the elevator
         public abstract void RemoveFrom(int count);
+        
+        // Pre load Destination Floors
+        public virtual void AddDestinationFloor(int floor)
+        {
+            destinationFloors.Add(floor);
+            SortDestinationFloors();
+        }
+
+        // Method to sort the destination floors
+        protected virtual void SortDestinationFloors()
+        {
+            QuickSort(destinationFloors, 0, destinationFloors.Count - 1);
+        }
+
+        // Quicksort algorithm
+        private void QuickSort(List<int> floors, int low, int high)
+        {
+            if (low < high)
+            {
+                int pi = Partition(floors, low, high);
+
+                QuickSort(floors, low, pi - 1);
+                QuickSort(floors, pi + 1, high);
+            }
+        }
+        private int Partition(List<int> floors, int low, int high)
+        {
+            int pivot = floors[high];
+            int i = (low - 1);
+
+            for (int j = low; j < high; j++)
+            {
+                if (floors[j] < pivot)
+                {
+                    i++;
+                    int temp = floors[i];
+                    floors[i] = floors[j];
+                    floors[j] = temp;
+                }
+            }
+
+            int temp1 = floors[i + 1];
+            floors[i + 1] = floors[high];
+            floors[high] = temp1;
+
+            return i + 1;
+        }
+
+
 
     }
 }
