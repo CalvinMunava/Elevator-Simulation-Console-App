@@ -38,7 +38,8 @@ namespace elevator_app_tester
             buildingManager.CallElevator(5, 2);
 
             // Assert
-            Microsoft.VisualStudio.TestTools.UnitTesting.Assert.IsTrue(buildingManager.elevators.Any(e => e.CurrentFloor == 4)); // Elevator with floor 4 should be called
+            Microsoft.VisualStudio.TestTools.UnitTesting.Assert.IsTrue(buildingManager.elevators.Any(e => e.CurrentFloor == 5 )); 
+            // Elevator with floor 4 should be called
         }
 
 

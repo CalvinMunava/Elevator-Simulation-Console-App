@@ -28,15 +28,15 @@ namespace elevator_app.Classes
 
         public void CallElevator(int floor, int numPassengers)
         {
-            // Find Nearest Available Elevator with capacity that is suffcient
+            // Find Nearest Available Elevator with sufficient capacity
             Elevator nearestElevator = null;
             int minDistance = int.MaxValue;
-            foreach(var elevator in elevators) //Lcoate Nearest Elevator
+            foreach (var elevator in elevators)
             {
-                if(!elevator.IsMoving && (elevator.CurrentCapacity + numPassengers) <= elevator.CurrentCapacity)
+                if (!elevator.IsMoving && (elevator.CurrentCapacity + numPassengers) <= elevator.MaxCapacity)
                 {
                     int distance = Math.Abs(elevator.CurrentFloor - floor);
-                    if(distance < minDistance)
+                    if (distance < minDistance)
                     {
                         minDistance = distance;
                         nearestElevator = elevator;
@@ -44,16 +44,17 @@ namespace elevator_app.Classes
                 }
             }
 
-            if( nearestElevator != null )
+            if (nearestElevator != null)
             {
                 Console.WriteLine($"Elevator {nearestElevator.ElevatorNumber} called to floor {floor}");
-                nearestElevator.AddTo(floor, numPassengers);
+                nearestElevator.MoveTo(floor); // Move the elevator to the called floor
+                nearestElevator.AddTo(numPassengers, floor); // Reversed the parameters
             }
             else
             {
-                // If no Elevator Available , enque the elevator
+                // If no Elevator Available, enqueue the call
                 callQueue.Enqueue(new Tuple<int, int>(floor, numPassengers));
-                Console.WriteLine($"No Available Elevator Found,  call has been Queued");
+                Console.WriteLine($"No Available Elevator Found, call has been Queued");
             }
         }
 

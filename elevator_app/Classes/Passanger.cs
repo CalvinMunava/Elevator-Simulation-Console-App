@@ -23,45 +23,43 @@ namespace elevator_app.Classes
             Music = music;
         }
 
-        public override void AddTo(int count, int destinationFloor)
+        public override void AddTo(int numPassengers, int destinationFloor)
         {
-            if (CurrentCapacity + count <= MaxCapacity)
+            if (CurrentCapacity + numPassengers <= MaxCapacity)
             {
-                CurrentCapacity += count;
+                CurrentCapacity += numPassengers;
                 if (LogMovement)
-                    Console.WriteLine($"{count} passengers entered elevator {ElevatorNumber}.");
+                    Console.WriteLine($"{numPassengers} passengers entered elevator {ElevatorNumber}.");
 
                 // Set destination After adding
                 this.DestinationFloor = destinationFloor;
+
                 if(CurrentFloor != DestinationFloor) { 
                 
                     MoveTo(DestinationFloor); // Move elevator to destination floor
-                    RemoveFrom(CurrentCapacity); // Remove Passangers
-                    SetRandomDestinationFloor(); // Set New Random Floor
                 }
                 else
                 {
-                    RemoveFrom(CurrentCapacity); // Remove from Elevator
                     SetRandomDestinationFloor(); // Set New Random Floor
                 }
             }
             else
             {
-                Console.WriteLine($"Adding {count} passengers would exceed elevator {ElevatorNumber}'s capacity of {MaxCapacity}.");
+                Console.WriteLine($"Adding {numPassengers} passengers would exceed elevator {ElevatorNumber}'s capacity of {MaxCapacity}.");
             }
         }
 
-        public override void RemoveFrom(int count)
+        public override void RemoveFrom(int numPassengers)
         {
-            if (CurrentCapacity - count >= 0)
+            if (CurrentCapacity - numPassengers >= 0)
             {
-                CurrentCapacity -= count;
+                CurrentCapacity -= numPassengers;
                 if (LogMovement)
-                    Console.WriteLine($"{count} passengers exited elevator {ElevatorNumber}.");
+                    Console.WriteLine($"{numPassengers} passengers exited elevator {ElevatorNumber}.");
             }
             else
             {
-                Console.WriteLine($"Cannot remove {count} passengers. There are only {CurrentCapacity} passengers in elevator {ElevatorNumber}.");
+                Console.WriteLine($"Cannot remove {numPassengers} passengers. There are only {CurrentCapacity} passengers in elevator {ElevatorNumber}.");
             }
 
             if(DestinationFloor == -1)
@@ -78,6 +76,7 @@ namespace elevator_app.Classes
             {
                 randomFloor = random.Next(1, 16);
             }
+            DestinationFloor = randomFloor; // Assign the random floor as the destination floor
             if (LogMovement)
                 Console.WriteLine($"Elevator {ElevatorNumber} selected destination floor {randomFloor}.");
 
