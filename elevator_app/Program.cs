@@ -23,6 +23,15 @@ namespace elevator_app
                 if (AuthenticateUser().Result) // Check User Access 
                 {
                     // User has been authorized
+                    Console.WriteLine("Admin User : " + "\x1B[32mlogged in\x1B[0m");
+
+                    // Display List of Elevator Controls
+                    DisplayCommandKey();
+
+
+
+
+
                 }
                 else
                 {
@@ -128,8 +137,20 @@ namespace elevator_app
             Console.WriteLine();
             return password;
         }
-
-
+        static void DisplayCommandKey()
+        {
+           
+            Console.WriteLine("\nCommand Key:");
+            Console.WriteLine("----------------------------------------------------------------------------------------");
+            Console.WriteLine("| Command                                | Description                                 |");
+            Console.WriteLine("----------------------------------------------------------------------------------------");
+            Console.WriteLine("| help                                   | Display available commands                  |");
+            Console.WriteLine("| list                                   | Display real time Elevator Status           |");
+            Console.WriteLine("| call - [floor]:[passangers]            | Call an elevator to the specified floor     |");
+            Console.WriteLine("| send - [floor]                         | Send an elevator to the specified floor     |");
+            Console.WriteLine("| exit                                   | Exit the Elevator Management System         |");
+            Console.WriteLine("----------------------------------------------------------------------------------------");
+        }
 
 
 
