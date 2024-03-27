@@ -53,19 +53,18 @@ namespace elevator_app.Classes
             {
                 // If no Elevator Available , enque the elevator
                 callQueue.Enqueue(new Tuple<int, int>(floor, numPassengers));
-                Console.WriteLine($"No Available Eevator Found,  call has been Queued");
+                Console.WriteLine($"No Available Elevator Found,  call has been Queued");
             }
         }
 
         public void ProcessQueue(int floor, int numPassengers)
         {
-            while(callQueue.Count > 0)
+            int queueCount = callQueue.Count;
+            for (int i = 0; i < queueCount; i++)
             {
                 var call = callQueue.Dequeue();
                 CallElevator(call.Item1, call.Item2);
             }
-
-
         }
 
 
