@@ -1,7 +1,7 @@
 namespace elevator_app_tester
 {
     [TestClass]
-    public class UnitTest1
+    public class ElevatorTest
     {
         [TestMethod]
         public void TestMethod1()
