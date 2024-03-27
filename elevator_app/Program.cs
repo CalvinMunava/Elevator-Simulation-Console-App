@@ -35,13 +35,13 @@ namespace elevator_app
                     DisplayCommandKey();
 
                     // Start Simulation Thread
-                    SimulateMovementThread.Start();
+                    //SimulateMovementThread.Start();
 
                     // Start User Input Listen Thread
                     UserInputThread.Start();
 
                     // Start Queue Processing
-                    StartQueueThread.Start();
+                    //StartQueueThread.Start();
 
 
                 }
@@ -156,13 +156,13 @@ namespace elevator_app
         {
            
             Console.WriteLine("\nCommand Key:");
-            Console.WriteLine("----------------------------------------------------------------------------------------");
-            Console.WriteLine("| Command                                | Description                                 |");
-            Console.WriteLine("----------------------------------------------------------------------------------------");
-            Console.WriteLine("| status                                 | Display real time Elevator Status           |");
-            Console.WriteLine("| call - [floor]:[passangers]            | Call an elevator to the specified floor     |");
-            Console.WriteLine("| exit                                   | Exit the Elevator Management System         |");
-            Console.WriteLine("----------------------------------------------------------------------------------------");
+            Console.WriteLine("-----------------------------------------------------------------------------------------------------------------------");
+            Console.WriteLine("| Command                                                               | Description                                 |");
+            Console.WriteLine("-----------------------------------------------------------------------------------------------------------------------");
+            Console.WriteLine("| status                                                                | Display real time Elevator Status           |");
+            Console.WriteLine("| call - [callToFloor]:[WaitingPassangers]:[DestinationFloor]           | Call an elevator to the specified floor     |");
+            Console.WriteLine("| exit                                                                  | Exit the Elevator Management System         |");
+            Console.WriteLine("-----------------------------------------------------------------------------------------------------------------------");
         }
 
         // Default Elevator Movement Threads
@@ -232,13 +232,21 @@ namespace elevator_app
                 {
                     // Extract floor and passengers from the input
                     string[] argumentParts = inputParts[2].Split(':');
-                    if (argumentParts.Length == 2 && int.TryParse(argumentParts[0], out int floor) && int.TryParse(argumentParts[1], out int passengers))
+                    if (argumentParts.Length == 3 && 
+                        int.TryParse(argumentParts[0], out int floor) && 
+                        int.TryParse(argumentParts[1], out int passengers) &&
+                        int.TryParse(argumentParts[2], out int destinationFloor))
                     {
-                        if (floor >= 1 && floor <= 15)
+                        if (floor >= 0 && floor <= 15 && 
+                            destinationFloor >= 0 && destinationFloor <= 15)
                         {
                             // Call an elevator to the specified floor
                             Console.WriteLine($"Calling Nearest Elevator to floor {floor}.");
-                            elevatorManager.CallElevator(floor, passengers);
+                            elevatorManager.CallElevator(floor, passengers, destinationFloor);
+                            foreach(var elevator in elevatorManager.elevators)
+                            {
+                                elevator.LogMovement = false;
+                            }
                             DisplayElevatorStatus();
                         }
                         else

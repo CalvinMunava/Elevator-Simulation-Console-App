@@ -10,12 +10,12 @@ namespace elevator_app.Classes
     public class BuildingManager
     {
         public List<Elevator> elevators = new List<Elevator>();
-        public Queue<Tuple<int, int>> callQueue;
+        public Queue<Tuple<int, int, int>> callQueue;
 
         public BuildingManager(int totalElevators)
         {
             elevators = new List<Elevator>();
-            callQueue = new Queue<Tuple<int, int>>();
+            callQueue = new Queue<Tuple<int, int, int>>();
             Random random = new Random();
             for (int i = 0; i < totalElevators; i++)
             {
@@ -26,7 +26,7 @@ namespace elevator_app.Classes
             }
         }
 
-        public void CallElevator(int floor, int numPassengers)
+        public void CallElevator(int floor, int numPassengers, int DestinationFloor)
         {
             // Find Nearest Available Elevator with capacity that is suffcient
             Elevator nearestElevator = null;
@@ -55,13 +55,13 @@ namespace elevator_app.Classes
                     Console.WriteLine($"Elevator {nearestElevator.ElevatorNumber} called to floor {floor}");
                     nearestElevator.LogMovement = true;
                     nearestElevator.MoveTo(floor);
-                    nearestElevator.AddTo(numPassengers, floor);
+                    nearestElevator.AddTo(numPassengers, DestinationFloor);
                 }
             }
             else
             {
                 // If no Elevator Available , enque the elevator
-                callQueue.Enqueue(new Tuple<int, int>(floor, numPassengers));
+                callQueue.Enqueue(new Tuple<int, int, int>(floor, numPassengers, DestinationFloor));
                 Console.WriteLine($"No Available Elevator Found,  call has been Queued");
             }
         }
@@ -71,7 +71,7 @@ namespace elevator_app.Classes
             while(callQueue.Count > 0)
             {
                 var call = callQueue.Dequeue();
-                CallElevator(call.Item1, call.Item2);
+                CallElevator(call.Item1, call.Item2, call.Item3);
             }
 
         }

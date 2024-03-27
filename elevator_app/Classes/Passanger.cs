@@ -39,8 +39,12 @@ namespace elevator_app.Classes
                 AddDestinationFloor(destinationFloor);
 
 
-                if (CurrentFloor != DestinationFloor) { 
-                
+                // Close Doors
+                CloseDoor(null);
+
+
+                if (CurrentFloor != DestinationFloor) {
+                   
                     MoveTo(DestinationFloor); // Move elevator to destination floor
                 }
                 else
@@ -59,17 +63,10 @@ namespace elevator_app.Classes
             CurrentCapacity -= numPassengers;
             if (CurrentCapacity < 0)
             {
-                CurrentCapacity = 0;
-                if (LogMovement)
-                    Console.WriteLine($"{numPassengers} passengers exited elevator {ElevatorNumber}.");
+                CurrentCapacity = 0;     
             }
-
-
-
-            if (CurrentCapacity == 0)
-            {
-                SetRandomDestinationFloor();
-            }
+            if (LogMovement)
+                Console.WriteLine($"{numPassengers} passengers exited elevator {ElevatorNumber}.");
         }
 
         public void SetRandomDestinationFloor()

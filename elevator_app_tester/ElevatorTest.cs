@@ -60,9 +60,9 @@ namespace elevator_app_tester
         {
             // Arrange
             BuildingManager buildingManager = new BuildingManager(4);
-            buildingManager.callQueue.Enqueue(new Tuple<int, int>(3, 2));
-            buildingManager.callQueue.Enqueue(new Tuple<int, int>(5, 3));
-            buildingManager.callQueue.Enqueue(new Tuple<int, int>(7, 1));
+            buildingManager.callQueue.Enqueue(new Tuple<int, int, int>(3, 2, 5));
+            buildingManager.callQueue.Enqueue(new Tuple<int, int, int>(5, 3, 10));
+            buildingManager.callQueue.Enqueue(new Tuple<int, int, int>(7, 1, 12));
             int initialQueueCount = buildingManager.callQueue.Count;
 
             // Act
