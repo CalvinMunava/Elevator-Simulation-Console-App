@@ -42,6 +42,20 @@ namespace elevator_app_tester
         }
 
 
+        [Test]
+        public void ProcessQueue_Empty_Queue()
+        {
+            // Arrange
+            BuildingManager buildingManager = new BuildingManager(4);
+            int initialQueueCount = buildingManager.callQueue.Count;
+
+            // Act
+            buildingManager.ProcessQueue(5, 2);
+
+            // Assert
+            Microsoft.VisualStudio.TestTools.UnitTesting.Assert.AreEqual(initialQueueCount, buildingManager.callQueue.Count); // Queue count should remain the same
+        }
+
 
 
 
