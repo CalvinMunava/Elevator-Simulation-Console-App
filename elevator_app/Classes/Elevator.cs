@@ -31,7 +31,7 @@ namespace elevator_app.Classes
             
         // Parametered Constructor
         public Elevator(int elevatorNumber, int initialFloor, bool isMoving, Direction direction, int currentCapacity, int maxCapacity, bool logMovement,int destinationFloor)
-            {
+        {
                 ElevatorNumber = elevatorNumber;
                 CurrentFloor = initialFloor;
                 Direction = direction;
@@ -40,7 +40,7 @@ namespace elevator_app.Classes
                 MaxCapacity = maxCapacity;
                 LogMovement = logMovement;
                 DestinationFloor = destinationFloor;
-            }
+        }
 
 
         // Methods 
