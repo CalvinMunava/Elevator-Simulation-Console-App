@@ -31,9 +31,10 @@ namespace elevator_app.Classes
             // Find Nearest Available Elevator with capacity that is suffcient
             Elevator nearestElevator = null;
             int minDistance = int.MaxValue;
-            foreach(var elevator in elevators) //Lcoate Nearest Elevator
+            bool elevatorFound = false;
+            foreach (var elevator in elevators) //Lcoate Nearest Elevator
             {
-                if(!elevator.IsMoving && (elevator.CurrentCapacity + numPassengers) <= elevator.CurrentCapacity)
+                if ((elevator.CurrentCapacity + numPassengers) <= elevator.MaxCapacity)
                 {
                     int distance = Math.Abs(elevator.CurrentFloor - floor);
                     if(distance < minDistance)
@@ -41,33 +42,37 @@ namespace elevator_app.Classes
                         minDistance = distance;
                         nearestElevator = elevator;
                     }
+
+                    if (!elevatorFound)
+                        elevatorFound = true;
                 }
             }
 
-            if( nearestElevator != null )
+            if (elevatorFound)
             {
-                Console.WriteLine($"Elevator {nearestElevator.ElevatorNumber} called to floor {floor}");
-                nearestElevator.AddTo(floor, numPassengers);
-                nearestElevator.LogMovement = true;
-                nearestElevator.MoveTo(floor); // Move the elevator to the called floor
-                nearestElevator.AddTo(numPassengers, floor); // Reversed the parameters
+                if (nearestElevator != null)
+                {
+                    Console.WriteLine($"Elevator {nearestElevator.ElevatorNumber} called to floor {floor}");
+                    nearestElevator.LogMovement = true;
+                    nearestElevator.MoveTo(floor);
+                    nearestElevator.AddTo(numPassengers, floor);
+                }
             }
             else
             {
                 // If no Elevator Available , enque the elevator
                 callQueue.Enqueue(new Tuple<int, int>(floor, numPassengers));
-                Console.WriteLine($"No Available Eevator Found,  call has been Queued");
+                Console.WriteLine($"No Available Elevator Found,  call has been Queued");
             }
         }
 
-        public void ProcessQueue(int floor, int numPassengers)
+        public void ProcessQueue()
         {
             while(callQueue.Count > 0)
             {
                 var call = callQueue.Dequeue();
                 CallElevator(call.Item1, call.Item2);
             }
-
 
         }
 

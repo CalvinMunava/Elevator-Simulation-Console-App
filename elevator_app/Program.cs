@@ -14,6 +14,7 @@ namespace elevator_app
         public static BuildingManager elevatorManager = new BuildingManager(4); //Initialise Building to contain only 4 Elevators
         public static Thread SimulateMovementThread = new Thread(() => SimulateElevatorMovement());
         public static Thread UserInputThread = new Thread(() => HandleUserInput());
+        public static Thread StartQueueThread = new Thread(() => ProcessQueue());
         static async Task Main(string[] args)
         {
             // Set Console Settings
@@ -38,6 +39,9 @@ namespace elevator_app
 
                     // Start User Input Listen Thread
                     UserInputThread.Start();
+
+                    // Start Queue Processing
+                    StartQueueThread.Start();
 
 
                 }
@@ -157,7 +161,6 @@ namespace elevator_app
             Console.WriteLine("----------------------------------------------------------------------------------------");
             Console.WriteLine("| status                                 | Display real time Elevator Status           |");
             Console.WriteLine("| call - [floor]:[passangers]            | Call an elevator to the specified floor     |");
-            Console.WriteLine("| send - [floor]                         | Send an elevator to the specified floor     |");
             Console.WriteLine("| exit                                   | Exit the Elevator Management System         |");
             Console.WriteLine("----------------------------------------------------------------------------------------");
         }
@@ -189,9 +192,14 @@ namespace elevator_app
                 }
                 Thread.Sleep(1500); // Delay for 1.5 Seconds                                
             }
+        }     
+        static void ProcessQueue()
+        {
+            elevatorManager.ProcessQueue(); // Process the call queue
+            Thread.Sleep(1000);
         }
-       
-        
+
+     
         // User Input Threads
         static void HandleUserInput()
         {
@@ -230,6 +238,7 @@ namespace elevator_app
                         Console.WriteLine($"Calling Nearest Elevator to floor {floor}.");
                         elevatorManager.CallElevator(floor, passengers);
                         DisplayElevatorStatus();
+                        
                     }
                     else
                     {

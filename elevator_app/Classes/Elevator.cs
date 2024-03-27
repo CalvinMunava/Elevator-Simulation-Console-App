@@ -15,7 +15,7 @@ namespace elevator_app.Classes
         public int ElevatorNumber { get; private set; }
         public int CurrentFloor { get;  set; } = 1;
         public Direction Direction { get;  set; } = Direction.stationary;
-        public bool IsMoving { get; private set; } = false;
+        public bool IsMoving { get;  set; } = false;
         public int CurrentCapacity { get; set; } = 0;
         public int MaxCapacity { get; set; }
         public bool LogMovement { get; set; } = false;
@@ -83,7 +83,7 @@ namespace elevator_app.Classes
 
                 // Log movement if needed
                 if (LogMovement)
-                    Console.WriteLine($"Elevator {ElevatorNumber} moving to floor {CurrentFloor}...");
+                    Console.WriteLine($"Elevator {ElevatorNumber} is on floor {CurrentFloor}...");
             }
 
             IsMoving = false;

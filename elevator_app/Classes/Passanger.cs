@@ -51,18 +51,17 @@ namespace elevator_app.Classes
 
         public override void RemoveFrom(int numPassengers)
         {
-            if (CurrentCapacity - numPassengers >= 0)
+            CurrentCapacity -= numPassengers;
+            if (CurrentCapacity < 0)
             {
-                CurrentCapacity -= numPassengers;
+                CurrentCapacity = 0;
                 if (LogMovement)
                     Console.WriteLine($"{numPassengers} passengers exited elevator {ElevatorNumber}.");
             }
-            else
-            {
-                Console.WriteLine($"Cannot remove {numPassengers} passengers. There are only {CurrentCapacity} passengers in elevator {ElevatorNumber}.");
-            }
 
-            if(DestinationFloor == -1)
+
+
+            if (CurrentCapacity == 0)
             {
                 SetRandomDestinationFloor();
             }
@@ -76,6 +75,8 @@ namespace elevator_app.Classes
             {
                 randomFloor = random.Next(1, 16);
             }
+            Direction = Direction.stationary;
+            IsMoving = false;
             DestinationFloor = randomFloor; // Assign the random floor as the destination floor
             if (LogMovement)
                 Console.WriteLine($"Elevator {ElevatorNumber} selected destination floor {randomFloor}.");
