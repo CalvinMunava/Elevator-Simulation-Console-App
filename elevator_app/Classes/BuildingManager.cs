@@ -26,6 +26,47 @@ namespace elevator_app.Classes
             }
         }
 
+        public void CallElevator(int floor, int numPassengers)
+        {
+            // Find Nearest Available Elevator with capacity that is suffcient
+            Elevator nearestElevator = null;
+            int minDistance = int.MaxValue;
+            foreach(var elevator in elevators) //Lcoate Nearest Elevator
+            {
+                if(!elevator.IsMoving && (elevator.CurrentCapacity + numPassengers) <= elevator.CurrentCapacity)
+                {
+                    int distance = Math.Abs(elevator.CurrentFloor - floor);
+                    if(distance < minDistance)
+                    {
+                        minDistance = distance;
+                        nearestElevator = elevator;
+                    }
+                }
+            }
+
+            if( nearestElevator != null )
+            {
+                Console.WriteLine($"Elevator {nearestElevator.ElevatorNumber} called to floor {floor}");
+                nearestElevator.AddTo(floor, numPassengers);
+            }
+            else
+            {
+                // If no Elevator Available , enque the elevator
+                callQueue.Enqueue(new Tuple<int, int>(floor, numPassengers));
+                Console.WriteLine($"No Available Eevator Found,  call has been Queued");
+            }
+        }
+
+        public void ProcessQueue(int floor, int numPassengers)
+        {
+            while(callQueue.Count > 0)
+            {
+                var call = callQueue.Dequeue();
+                CallElevator(call.Item1, call.Item2);
+            }
+
+
+        }
 
 
 
@@ -34,9 +75,12 @@ namespace elevator_app.Classes
 
 
 
-       
 
 
 
-    }
+
+
+
+
+        }
 }

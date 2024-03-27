@@ -13,7 +13,7 @@ namespace elevator_app.Classes
         // Properties  
 
         public int ElevatorNumber { get; private set; }
-        public int CurrentFloor { get; private set; } = 1;
+        public int CurrentFloor { get;  set; } = 1;
         public Direction Direction { get;  set; } = Direction.stationary;
         public bool IsMoving { get; private set; } = false;
         public int CurrentCapacity { get; set; } = 0;
