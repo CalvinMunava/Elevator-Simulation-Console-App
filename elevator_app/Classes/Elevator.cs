@@ -14,7 +14,7 @@ namespace elevator_app.Classes
 
         public int ElevatorNumber { get; private set; }
         public int CurrentFloor { get; private set; } = 1;
-        public Direction Direction { get; private set; } = Direction.stationary;
+        public Direction Direction { get;  set; } = Direction.stationary;
         public bool IsMoving { get; private set; } = false;
         public int CurrentCapacity { get; set; } = 0;
         public int MaxCapacity { get; set; }
@@ -49,19 +49,22 @@ namespace elevator_app.Classes
         {
             if (targetFloor == CurrentFloor)
             {
-                Console.WriteLine($"Elevator {ElevatorNumber} is already on floor {CurrentFloor}.");
+                if (LogMovement)
+                    Console.WriteLine($"Elevator {ElevatorNumber} is already on floor {CurrentFloor}.");
                 return;
             }
 
             if (targetFloor > CurrentFloor)
             {
                 Direction = Direction.up;
-                Console.WriteLine($"Elevator {ElevatorNumber} is moving up from floor {CurrentFloor} to floor {targetFloor}.");
+                if (LogMovement)
+                    Console.WriteLine($"Elevator {ElevatorNumber} is moving up from floor {CurrentFloor} to floor {targetFloor}.");
             }
             else
             {
                 Direction = Direction.down;
-                Console.WriteLine($"Elevator {ElevatorNumber} is moving down from floor {CurrentFloor} to floor {targetFloor}.");
+                if (LogMovement)
+                    Console.WriteLine($"Elevator {ElevatorNumber} is moving down from floor {CurrentFloor} to floor {targetFloor}.");
             }
 
             IsMoving = true;
@@ -84,6 +87,8 @@ namespace elevator_app.Classes
             }
 
             IsMoving = false;
+            Direction = Direction.stationary;
+          
             Console.WriteLine($"Elevator {ElevatorNumber} has arrived at floor {CurrentFloor}.");
         }
 

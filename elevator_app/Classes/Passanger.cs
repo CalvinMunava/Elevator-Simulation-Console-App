@@ -63,6 +63,11 @@ namespace elevator_app.Classes
             {
                 Console.WriteLine($"Cannot remove {count} passengers. There are only {CurrentCapacity} passengers in elevator {ElevatorNumber}.");
             }
+
+            if(DestinationFloor == -1)
+            {
+                SetRandomDestinationFloor();
+            }
         }
 
         public void SetRandomDestinationFloor()
