@@ -12,7 +12,8 @@ namespace elevator_app
     {
 
         public static BuildingManager elevatorManager = new BuildingManager(4); //Initialise Building to contain only 4 Elevators
-        public static Thread SimulateMovementThread = new Thread(() => SimulateElevatorMovement(elevatorManager));
+        public static Thread SimulateMovementThread = new Thread(() => SimulateElevatorMovement());
+        public static Thread UserInputThread = new Thread(() => HandleUserInput());
         static async Task Main(string[] args)
         {
             // Set Console Settings
@@ -32,19 +33,11 @@ namespace elevator_app
                     // Display List of Elevator Controls
                     DisplayCommandKey();
 
-                    DisplayElevatorStatus(elevatorManager);
-
                     // Start Simulation Thread
                     SimulateMovementThread.Start();
 
-
-                    // Display Default Elevator Statuses
-                    //while (true)
-                    //{
-                        DisplayElevatorStatus(elevatorManager);
-                    //}
-
-
+                    // Start User Input Listen Thread
+                    UserInputThread.Start();
 
 
                 }
@@ -163,46 +156,24 @@ namespace elevator_app
             Console.WriteLine("----------------------------------------------------------------------------------------");
             Console.WriteLine("| Command                                | Description                                 |");
             Console.WriteLine("----------------------------------------------------------------------------------------");
-            Console.WriteLine("| status                                 | Display available commands                  |");
-            Console.WriteLine("| list                                   | Display real time Elevator Status           |");
+            Console.WriteLine("| status                                 | Display real time Elevator Status           |");
             Console.WriteLine("| call - [floor]:[passangers]            | Call an elevator to the specified floor     |");
             Console.WriteLine("| send - [floor]                         | Send an elevator to the specified floor     |");
             Console.WriteLine("| exit                                   | Exit the Elevator Management System         |");
             Console.WriteLine("----------------------------------------------------------------------------------------");
         }
 
-        // Display Elevator Status 
-        static void DisplayElevatorStatus(BuildingManager elevatorManager)
+        // Default Elevator Movement Threads
+        static void SimulateElevatorMovement()
         {
-            Console.WriteLine("\nElevator Status:");
-            Console.WriteLine("------------------------------------------------------------------------------");
-            Console.WriteLine("| Elevator No. | Current Floor | Direction     | Is Moving | Passenger Count |");
-            Console.WriteLine("------------------------------------------------------------------------------");
             foreach (Elevator elevator in elevatorManager.elevators)
             {
-                string isMovingStatus = elevator.IsMoving ? "\x1B[32mtrue\x1B[0m" : "\x1B[31mfalse\x1B[0m"; // Green for true, red for false
-                Console.WriteLine($"| {elevator.ElevatorNumber,-13} | {elevator.CurrentFloor,-13} | {elevator.Direction,-13} | {isMovingStatus,-17} | {elevator.CurrentCapacity,-15} |");
-            }
-            Console.WriteLine("------------------------------------------------------------------------------");
-            Thread.Sleep(5000);
-        }
-
-        // Simulate Elevator Movement 
-        static void SimulateElevatorMovement(BuildingManager elevatorManager)
-        {
-            List<Thread> elevatorThreads = new List<Thread>();
-            foreach (Elevator elevator in elevatorManager.elevators)
-            {
-                Thread elevatorThread = new Thread(() => MoveElevator(elevator));
-                elevatorThreads.Add(elevatorThread);
-                elevatorThread.Start();
+                Task.Run(() => MoveElevator(elevator));
             }
         }
-
-        static void MoveElevator(Elevator elevator)
+        static async Task MoveElevator(Elevator elevator)
         {
             Random random = new Random();
-
             while (true)
             {
                 if (!elevator.IsMoving && elevator.CurrentCapacity == 0)
@@ -210,13 +181,73 @@ namespace elevator_app
                     // Set direction to stationary when elevator is not moving
                     elevator.Direction = Direction.stationary;
 
-                    // Simulate elevator movement
                     int randomFloor = random.Next(1, 16); // Random floor between 1 and 15
+                    int randomUsers = random.Next(1, 12); // Random floor between 1 and 12
+                    int randomDestination = random.Next(1, 12); // Random floor between 1 and 12
                     elevator.MoveTo(randomFloor);
+                    elevator.AddTo(randomUsers, randomDestination);
+                    elevator.RemoveFrom(elevator.CurrentCapacity);
                 }
-                Thread.Sleep(500); // Wait for 5 seconds before moving next elevator
+                Thread.Sleep(1500); // Delay for 1.5 Seconds                                
             }
         }
+       
+        
+        // User Input Threads
+        static void HandleUserInput()
+        {
+            while (true)
+            {
+                string userInput = Console.ReadLine();
+                ProcessUserInput(userInput);
+            }
+        }
+        static void ProcessUserInput(string userInput)
+        {
+            if (userInput.ToLower() == "help")
+            {
+                Console.Clear();
+                DisplayCommandKey();
+            }
+            if (userInput.ToLower() == "status")
+            {
+                Console.Clear();
+                DisplayElevatorStatus();
+            }
+            else if (userInput.ToLower() == "exit")
+            {
+                Console.WriteLine("Exiting the Elevator Management System.");
+                Environment.Exit(0);
+            }
+            else
+            {
+                Console.WriteLine("Invalid command. Type 'help' to see available commands.");
+            }
+
+
+        }
+
+        // Display Elevator Status 
+        static void DisplayElevatorStatus()
+        {
+            DisplayCommandKey();
+            Console.WriteLine("\nElevator Status:");
+            Console.WriteLine("------------------------------------------------------------------------------");
+            Console.WriteLine("| Elevator No. | Current Floor | Direction     | Is Moving | Passenger Count |");
+            Console.WriteLine("------------------------------------------------------------------------------");
+            lock (elevatorManager)
+            {
+                foreach (Elevator elevator in elevatorManager.elevators)
+                {
+                    string isMovingStatus = elevator.IsMoving ? "\x1B[32mtrue\x1B[0m" : "\x1B[31mfalse\x1B[0m"; // Green for true, red for false
+                    Console.WriteLine($"| {elevator.ElevatorNumber,-13} | {elevator.CurrentFloor,-13} | {elevator.Direction,-13} | {isMovingStatus,-17} | {elevator.CurrentCapacity,-15} |");
+                }
+            }
+            Console.WriteLine("------------------------------------------------------------------------------");
+        }
+
+
+
 
     }
 }

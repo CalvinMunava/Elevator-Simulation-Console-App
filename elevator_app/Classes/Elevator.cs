@@ -88,8 +88,8 @@ namespace elevator_app.Classes
 
             IsMoving = false;
             Direction = Direction.stationary;
-          
-            Console.WriteLine($"Elevator {ElevatorNumber} has arrived at floor {CurrentFloor}.");
+            if (LogMovement)
+                Console.WriteLine($"Elevator {ElevatorNumber} has arrived at floor {CurrentFloor}.");
         }
 
         // Add passengers to the elevator

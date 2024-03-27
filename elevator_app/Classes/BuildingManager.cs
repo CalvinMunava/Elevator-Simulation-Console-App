@@ -19,17 +19,22 @@ namespace elevator_app.Classes
             Random random = new Random();
             for (int i = 0; i < totalElevators; i++)
             {
-                // Only use Paassanger Type Elevators for this Example
-                int randomFloor = random.Next(1,16);                                             //  Set Starting Position
-                int randomPassengers = random.Next(0, 13);                                                        //  Set Random Passangers for Elevator
-                int randomPassengerLimit = 12;                                                   //  Set Maxmimum Passangers 
-                bool ac = random.Next(2) == 0 ? true : false;                                    //  Set Air Conditioning
-                bool music = random.Next(2) == 0 ? true : false;                                 //  Set Music Playing
-                int randomDestinationFloor = -1;                                                 //  Set Destination Floor
-                Passenger elevator = new Passenger(i + 1, randomFloor, false, Direction.stationary, randomPassengers, randomPassengerLimit, false, ac, music, randomDestinationFloor);
+                bool ac = random.Next(2) == 0 ? true : false;      //  Set Air Conditioning
+                bool music = random.Next(2) == 0 ? true : false;   //  Set Music Playing
+                Passenger elevator = new Passenger(i + 1, 1, false, Direction.stationary, 0, 12, false, ac, music, -1);
                 elevators.Add(elevator);
             }
         }
+
+
+
+
+
+
+
+
+
+       
 
 
 

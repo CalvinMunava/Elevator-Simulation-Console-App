@@ -35,7 +35,7 @@ namespace elevator_app.Classes
                 this.DestinationFloor = destinationFloor;
                 if(CurrentFloor != DestinationFloor) { 
                 
-                    MoveTo(DestinationFloor); // Move evevator to destination floor
+                    MoveTo(DestinationFloor); // Move elevator to destination floor
                     RemoveFrom(CurrentCapacity); // Remove Passangers
                     SetRandomDestinationFloor(); // Set New Random Floor
                 }
@@ -80,7 +80,6 @@ namespace elevator_app.Classes
             }
             if (LogMovement)
                 Console.WriteLine($"Elevator {ElevatorNumber} selected destination floor {randomFloor}.");
-
 
         }
 
