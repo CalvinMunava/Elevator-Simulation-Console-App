@@ -234,11 +234,17 @@ namespace elevator_app
                     string[] argumentParts = inputParts[2].Split(':');
                     if (argumentParts.Length == 2 && int.TryParse(argumentParts[0], out int floor) && int.TryParse(argumentParts[1], out int passengers))
                     {
-                        // Call an elevator to the specified floor
-                        Console.WriteLine($"Calling Nearest Elevator to floor {floor}.");
-                        elevatorManager.CallElevator(floor, passengers);
-                        DisplayElevatorStatus();
-                        
+                        if (floor >= 1 && floor <= 15)
+                        {
+                            // Call an elevator to the specified floor
+                            Console.WriteLine($"Calling Nearest Elevator to floor {floor}.");
+                            elevatorManager.CallElevator(floor, passengers);
+                            DisplayElevatorStatus();
+                        }
+                        else
+                        {
+                            Console.WriteLine("Invalid floor number. Please enter a floor number between 1 and 15.");
+                        }
                     }
                     else
                     {
