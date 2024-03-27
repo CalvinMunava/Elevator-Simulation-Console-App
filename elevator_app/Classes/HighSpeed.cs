@@ -32,8 +32,10 @@ namespace elevator_app.Classes
                 if (LogMovement)
                     Console.WriteLine($"{numPassengers} passengers entered elevator {ElevatorNumber}.");
 
-                // Set destination After adding
                 this.DestinationFloor = destinationFloor;
+
+                AddDestinationFloor(destinationFloor);
+
 
                 if (CurrentFloor != DestinationFloor)
                 {

@@ -32,6 +32,8 @@ namespace elevator_app.Classes
                
                 this.DestinationFloor = destinationFloor;
 
+                AddDestinationFloor(destinationFloor);
+
                 if (CurrentFloor != DestinationFloor)
                 {
 
