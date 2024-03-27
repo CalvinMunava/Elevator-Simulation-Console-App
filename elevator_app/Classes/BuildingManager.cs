@@ -69,18 +69,5 @@ namespace elevator_app.Classes
         }
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-        }
+    }
 }
