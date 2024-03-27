@@ -38,10 +38,8 @@ namespace elevator_app_tester
             buildingManager.CallElevator(5, 2);
 
             // Assert
-            Microsoft.VisualStudio.TestTools.UnitTesting.Assert.IsTrue(buildingManager.elevators.Any(e => e.CurrentFloor == 5 )); 
-            // Elevator with floor 4 should be called
+            Microsoft.VisualStudio.TestTools.UnitTesting.Assert.IsTrue(buildingManager.elevators.Any(e => e.CurrentFloor == 4)); // Elevator with floor 4 should be called
         }
-
 
         [Test]
         public void ProcessQueue_Empty_Queue()
@@ -73,9 +71,6 @@ namespace elevator_app_tester
             // Assert
             Microsoft.VisualStudio.TestTools.UnitTesting.Assert.AreEqual(0, buildingManager.callQueue.Count); // Queue should be empty after processing
         }
-
-
-
 
 
     }

@@ -28,15 +28,15 @@ namespace elevator_app.Classes
 
         public void CallElevator(int floor, int numPassengers)
         {
-            // Find Nearest Available Elevator with sufficient capacity
+            // Find Nearest Available Elevator with capacity that is suffcient
             Elevator nearestElevator = null;
             int minDistance = int.MaxValue;
-            foreach (var elevator in elevators)
+            foreach(var elevator in elevators) //Lcoate Nearest Elevator
             {
-                if (!elevator.IsMoving && (elevator.CurrentCapacity + numPassengers) <= elevator.MaxCapacity)
+                if(!elevator.IsMoving && (elevator.CurrentCapacity + numPassengers) <= elevator.CurrentCapacity)
                 {
                     int distance = Math.Abs(elevator.CurrentFloor - floor);
-                    if (distance < minDistance)
+                    if(distance < minDistance)
                     {
                         minDistance = distance;
                         nearestElevator = elevator;
@@ -44,28 +44,31 @@ namespace elevator_app.Classes
                 }
             }
 
-            if (nearestElevator != null)
+            if( nearestElevator != null )
             {
                 Console.WriteLine($"Elevator {nearestElevator.ElevatorNumber} called to floor {floor}");
+                nearestElevator.AddTo(floor, numPassengers);
+                nearestElevator.LogMovement = true;
                 nearestElevator.MoveTo(floor); // Move the elevator to the called floor
                 nearestElevator.AddTo(numPassengers, floor); // Reversed the parameters
             }
             else
             {
-                // If no Elevator Available, enqueue the call
+                // If no Elevator Available , enque the elevator
                 callQueue.Enqueue(new Tuple<int, int>(floor, numPassengers));
-                Console.WriteLine($"No Available Elevator Found, call has been Queued");
+                Console.WriteLine($"No Available Eevator Found,  call has been Queued");
             }
         }
 
         public void ProcessQueue(int floor, int numPassengers)
         {
-            int queueCount = callQueue.Count;
-            for (int i = 0; i < queueCount; i++)
+            while(callQueue.Count > 0)
             {
                 var call = callQueue.Dequeue();
                 CallElevator(call.Item1, call.Item2);
             }
+
+
         }
 
 
