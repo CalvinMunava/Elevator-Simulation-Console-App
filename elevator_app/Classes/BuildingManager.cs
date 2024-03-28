@@ -9,9 +9,11 @@ namespace elevator_app.Classes
 {
     public class BuildingManager
     {
+        // Properties
         public List<Elevator> elevators = new List<Elevator>();
         public Queue<Tuple<int, int, int>> callQueue;
 
+        // Constsructor Class
         public BuildingManager(int totalElevators)
         {
             elevators = new List<Elevator>();

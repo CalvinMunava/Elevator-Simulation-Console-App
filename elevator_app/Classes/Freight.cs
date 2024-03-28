@@ -7,12 +7,14 @@ using System.Threading.Tasks;
 
 namespace elevator_app.Classes
 {
-    public class Freight : Elevator
+    public class Freight : Elevator  // Elevator Child Class : Passanger
     {
-
+        // Properties
         public bool MaximumLoad { get; private set; }
         public DoorType DoorType { get; private set; }
 
+
+        // Default Constructors
         public Freight() : base()
         {
         }
@@ -24,6 +26,8 @@ namespace elevator_app.Classes
             DoorType = doorType;
         }
 
+
+        // Methods
         public override void AddTo(int numItems, int destinationFloor)
         {
             if (CurrentCapacity + numItems <= MaxCapacity)
@@ -32,19 +36,20 @@ namespace elevator_app.Classes
                 if (LogMovement)
                     Console.WriteLine($"{numItems} Items added to elevator {ElevatorNumber}.");
 
-
+                // Set destination After adding
                 this.DestinationFloor = destinationFloor;
 
+                // Add the new destination floor to the elevator
                 AddDestinationFloor(destinationFloor);
 
                 if (CurrentFloor != DestinationFloor)
                 {
 
-                    MoveTo(DestinationFloor);
+                    MoveTo(DestinationFloor);  // Move elevator to destination floor
                 }
                 else
                 {
-                    SetRandomDestinationFloor();
+                    SetRandomDestinationFloor();  // Set New Random Floor
                 }
             }
             else
@@ -74,14 +79,14 @@ namespace elevator_app.Classes
         public void SetRandomDestinationFloor()
         {
             Random random = new Random();
-            int randomFloor = random.Next(1, 16);
-            while (randomFloor == CurrentFloor)
+            int randomFloor = random.Next(1, 16);  // Only 15 floors in building
+            while (randomFloor == CurrentFloor)   // Ensure destination floor is different from current Floor
             {
                 randomFloor = random.Next(1, 16);
             }
             Direction = Direction.stationary;
             IsMoving = false;
-            DestinationFloor = randomFloor;
+            DestinationFloor = randomFloor;    // Assign the random floor as the destination floor
             if (LogMovement)
                 Console.WriteLine($"Elevator {ElevatorNumber} selected destination floor {randomFloor}.");
 

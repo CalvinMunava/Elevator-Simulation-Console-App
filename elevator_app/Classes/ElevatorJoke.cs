@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace elevator_app.Classes
 {
-    public class ElevatorJoke
+    public class ElevatorJoke // Elevator Jokes Class 😆
     {
         public int jokeID { get; set; }
         public string jokeText { get; set; }

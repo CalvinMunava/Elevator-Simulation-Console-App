@@ -11,10 +11,10 @@ namespace elevator_app
     class Program
     {
 
-        public static BuildingManager elevatorManager = new BuildingManager(4); //Initialise Building to contain only 4 Elevators
-        public static Thread SimulateMovementThread = new Thread(() => SimulateElevatorMovement());
-        public static Thread UserInputThread = new Thread(() => HandleUserInput());
-        public static Thread StartQueueThread = new Thread(() => ProcessQueue());
+        public static BuildingManager elevatorManager = new BuildingManager(4); // Initialise Building to contain only 4 Elevators
+        public static Thread SimulateMovementThread = new Thread(() => SimulateElevatorMovement()); // Simulate Elevator Movement
+        public static Thread UserInputThread = new Thread(() => HandleUserInput()); // Listen for User Input
+        public static Thread StartQueueThread = new Thread(() => ProcessQueue()); // Listen for any Queued Elevator Calls
         static async Task Main(string[] args)
         {
             // Set Console Settings
@@ -43,7 +43,6 @@ namespace elevator_app
                     // Start Queue Processing
                     StartQueueThread.Start();
                      
-
                 }
                 else
                 {

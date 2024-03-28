@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace elevator_app.Classes
 {
-    public abstract class Elevator
+    public abstract class Elevator // Elevator Parent Class 
     {
 
         public List<int> destinationFloors = new List<int>();
@@ -82,7 +82,7 @@ namespace elevator_app.Classes
         {
             lock (moveLock) // Lock the elevator object to prevent concurrent modifications
             {
-                lock (floorLock)
+                lock (floorLock) // Lock the floor object to prevent concurrent modifications
                 {
                     if (targetFloor < 0 || targetFloor > 15)
                     {
@@ -112,6 +112,7 @@ namespace elevator_app.Classes
                 {
                     // Simulate movement delay
                     Thread.Sleep(1000);
+
                     lock (floorLock)
                     {
 
@@ -192,21 +193,27 @@ namespace elevator_app.Classes
         {
             if (low < high)
             {
+                // Partition the array and get the pivot index
                 int pi = Partition(floors, low, high);
 
+                // Recursively sort the subarrays before and after the pivot
                 QuickSort(floors, low, pi - 1);
                 QuickSort(floors, pi + 1, high);
             }
         }
         private int Partition(List<int> floors, int low, int high)
         {
+            // Choose the pivot element (last element in this case)
             int pivot = floors[high];
             int i = (low - 1);
 
+            // Iterate through the array
             for (int j = low; j < high; j++)
             {
+                // If current element is smaller than the pivot
                 if (floors[j] < pivot)
                 {
+                    // Increment index of smaller element and swap elements
                     i++;
                     int temp = floors[i];
                     floors[i] = floors[j];
@@ -214,10 +221,12 @@ namespace elevator_app.Classes
                 }
             }
 
+            // Swap the pivot element with the element at index (i + 1)
             int temp1 = floors[i + 1];
             floors[i + 1] = floors[high];
             floors[high] = temp1;
 
+            // Return the pivot index
             return i + 1;
         }
 

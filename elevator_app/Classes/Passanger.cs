@@ -7,11 +7,13 @@ using System.Threading.Tasks;
 
 namespace elevator_app.Classes
 {
-    public class Passenger : Elevator
+    public class Passenger : Elevator // Elevator Child Class : Passanger
     {
+        // Properties
         public bool AC { get; private set; }
         public bool Music { get; private set; }
 
+        // Default Constructors
         public Passenger() : base()
         {
         }
@@ -23,6 +25,7 @@ namespace elevator_app.Classes
             Music = music;
         }
 
+        // Methods
         public override void AddTo(int numPassengers, int destinationFloor)
         {
             if (CurrentCapacity + numPassengers <= MaxCapacity)
@@ -30,10 +33,6 @@ namespace elevator_app.Classes
                 CurrentCapacity += numPassengers;
                 if (LogMovement)
                     Console.WriteLine($"{numPassengers} passengers entered elevator {ElevatorNumber}.");
-                   
-
-
-
 
                 // Set destination After adding
                 this.DestinationFloor = destinationFloor;
@@ -77,7 +76,7 @@ namespace elevator_app.Classes
         public void SetRandomDestinationFloor()
         {
             Random random = new Random();
-            int randomFloor = random.Next(1, 16); // only 15 floors in building
+            int randomFloor = random.Next(1, 16); // Only 15 floors in building
             while (randomFloor == CurrentFloor) // Ensure destination floor is different from current Floor
             {
                 randomFloor = random.Next(1, 16);
