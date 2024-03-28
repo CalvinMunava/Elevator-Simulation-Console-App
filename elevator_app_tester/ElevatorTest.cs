@@ -9,9 +9,12 @@ namespace elevator_app_tester
     [TestClass]
     public class ElevatorTest
     {
+        // Declare Globla Variables
         public static BuildingManager elevatorManager = new BuildingManager(4);
         public static Passenger elevator = new Passenger(1, 0, false, Direction.stationary, 0, 12, false, true, true, 10);
 
+
+        // Test For Elevator Movement
         [Test]
         public void Elevator_Moves_To_Target_Floor()
         {
@@ -26,6 +29,7 @@ namespace elevator_app_tester
             Microsoft.VisualStudio.TestTools.UnitTesting.Assert.AreEqual(targetFloor, elevator.CurrentFloor);
         }
 
+        // Test For Elevator Movement Response Via Call
         [Test]
         public void CallElevator_Nearest_Elevator_Is_Called()
         {
@@ -43,6 +47,7 @@ namespace elevator_app_tester
             Microsoft.VisualStudio.TestTools.UnitTesting.Assert.IsTrue(buildingManager.elevators.Any(e => e.CurrentFloor == 8)); // Elevator with floor 4 should be called
         }
 
+        // Test For Process Queue when Empty
         [Test]
         public void ProcessQueue_Empty_Queue()
         {
@@ -57,6 +62,7 @@ namespace elevator_app_tester
             Microsoft.VisualStudio.TestTools.UnitTesting.Assert.AreEqual(initialQueueCount, buildingManager.callQueue.Count); // Queue count should remain the same
         }
 
+        // Test For Process Queue when populated
         [Test]
         public void ProcessQueue_Non_Empty_Queue()
         {
