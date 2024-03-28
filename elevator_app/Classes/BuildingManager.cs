@@ -31,8 +31,7 @@ namespace elevator_app.Classes
 
         public void CallElevator(int floor, int numPassengers, int DestinationFloor)
         {
-            lock (elevators) // Lock the elevators list to prevent concurrent modifications
-            {
+
                 // Find Nearest Available Elevator with capacity that is suffcient
                 Elevator nearestElevator = null;
                 int minDistance = int.MaxValue;
@@ -82,7 +81,7 @@ namespace elevator_app.Classes
                         Console.WriteLine($"No Available Elevator Found,  call has been Queued");
                     }
                 }
-            }
+            
         }
 
         public void ProcessQueue()

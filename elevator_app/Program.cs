@@ -157,6 +157,8 @@ namespace elevator_app
            
             Console.WriteLine("\nCommand Key:");
             Console.WriteLine("-----------------------------------------------------------------------------------------------------------------------");
+            Console.WriteLine("| Max Floors : 15 | Max Passangers : 12 | Total Elevators: 4                                                          |");
+            Console.WriteLine("-----------------------------------------------------------------------------------------------------------------------");
             Console.WriteLine("| Command                                                               | Description                                 |");
             Console.WriteLine("-----------------------------------------------------------------------------------------------------------------------");
             Console.WriteLine("| status                                                                | Display real time Elevator Status           |");
@@ -169,9 +171,12 @@ namespace elevator_app
         static async Task SimulateElevatorMovement()
         {
             List<Task> tasks = new List<Task>();
-            foreach (Elevator elevator in elevatorManager.elevators)
+            lock (elevatorManager.elevators)
             {
-                tasks.Add(MoveElevator(elevator));
+                foreach (Elevator elevator in elevatorManager.elevators)
+                {
+                    tasks.Add(MoveElevator(elevator));
+                }
             }
 
             // Wait for all elevator movements to complete

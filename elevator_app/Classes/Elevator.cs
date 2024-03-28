@@ -12,7 +12,10 @@ namespace elevator_app.Classes
 
         public List<int> destinationFloors = new List<int>();
         private Timer doorTimer;
-
+        private readonly object moveLock = new object();
+        private readonly object floorLock = new object();
+      
+        
         // Properties  
 
         public int ElevatorNumber { get; private set; }
@@ -74,69 +77,78 @@ namespace elevator_app.Classes
             }
         }
 
+
         public void MoveTo(int targetFloor)
         {
-            lock (this) // Lock the elevator object to prevent concurrent modifications
+            lock (moveLock) // Lock the elevator object to prevent concurrent modifications
             {
-                if (targetFloor < 0 || targetFloor > 15)
+                lock (floorLock)
                 {
-                    if (LogMovement)
-                        Console.WriteLine($"Invalid floor requested: {targetFloor}");
-                    return;
+                    if (targetFloor < 0 || targetFloor > 15)
+                    {
+                        if (LogMovement)
+                            Console.WriteLine($"Invalid floor requested: {targetFloor}");
+                        return;
+                    }
+
+
+                    if (targetFloor == CurrentFloor)
+                    {
+                        if (LogMovement)
+                            Console.WriteLine($"Elevator {ElevatorNumber} is already on floor {CurrentFloor}.");
+                        return;
+                    }
+
+                    // Determine direction of movement
+                    Direction = targetFloor > CurrentFloor ? Direction.up : Direction.down;
+
+                    lock (moveLock)
+                    {
+                        IsMoving = true;
+                    };
                 }
-
-
-                if (targetFloor == CurrentFloor)
-                {
-                    if (LogMovement)
-                        Console.WriteLine($"Elevator {ElevatorNumber} is already on floor {CurrentFloor}.");
-                    return;
-                }
-
-                // Determine direction of movement
-                Direction = targetFloor > CurrentFloor ? Direction.up : Direction.down;
-                IsMoving = true;
-
                 // Simulate elevator movement
                 while (IsMoving)
                 {
                     // Simulate movement delay
                     Thread.Sleep(1000);
-
-                    // Move the elevator
-                    if (Direction == Direction.up)
+                    lock (floorLock)
                     {
-                        if (CurrentFloor < targetFloor)
+
+                        // Move the elevator
+                        if (Direction == Direction.up)
                         {
-                            CurrentFloor++;
+                            if (CurrentFloor < targetFloor)
+                            {
+                                CurrentFloor++;
+                            }
+                            else if (CurrentFloor > targetFloor) // If somehow the elevator passed the target floor
+                            {
+                                CurrentFloor--;
+                            }
+                            else // Reached the target floor
+                            {
+                                IsMoving = false;
+                                Direction = Direction.stationary;
+                            }
                         }
-                        else if (CurrentFloor > targetFloor) // If somehow the elevator passed the target floor
+                        else if (Direction == Direction.down)
                         {
-                            CurrentFloor--;
-                        }
-                        else // Reached the target floor
-                        {
-                            IsMoving = false;
-                            Direction = Direction.stationary;
+                            if (CurrentFloor > targetFloor)
+                            {
+                                CurrentFloor--;
+                            }
+                            else if (CurrentFloor < targetFloor) // If somehow the elevator passed the target floor
+                            {
+                                CurrentFloor++;
+                            }
+                            else // Reached the target floor
+                            {
+                                IsMoving = false;
+                                Direction = Direction.stationary;
+                            }
                         }
                     }
-                    else if (Direction == Direction.down)
-                    {
-                        if (CurrentFloor > targetFloor)
-                        {
-                            CurrentFloor--;
-                        }
-                        else if (CurrentFloor < targetFloor) // If somehow the elevator passed the target floor
-                        {
-                            CurrentFloor++;
-                        }
-                        else // Reached the target floor
-                        {
-                            IsMoving = false;
-                            Direction = Direction.stationary;
-                        }
-                    }
-
                     // Log movement
                     if (LogMovement)
                     {
@@ -151,8 +163,8 @@ namespace elevator_app.Classes
 
                 OpenDoor();
 
+                
             }
-
 
         }
 
