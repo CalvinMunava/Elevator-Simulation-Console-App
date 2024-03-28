@@ -20,6 +20,8 @@ Features
 
     Use the Console Interface: Follow the instructions provided in the console interface to interact with the elevator simulation. You can call elevators, view their status, and exit the application.
 
+    To Login to the terminal Control system enter anyone o fthe folllowing pass Phrases : "1234", "5678", "abcd"
+
 ## Architecture
 
 ## The Elevator Simulation Console App is built using C# and .NET Core. It consists of several key components:
