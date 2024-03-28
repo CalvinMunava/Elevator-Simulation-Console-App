@@ -33,7 +33,8 @@ Features
 Unit tests are included to ensure the functionality of critical components such as calling elevators and simulating elevator movement. You can run the tests using your preferred testing framework or directly from Visual Studio.
 Contributing
 
-Contributions to the Elevator Simulation Console App are welcome! If you encounter any issues or have suggestions for improvements, please open an issue or submit a pull request on GitHub.
-License
+If you encounter any issues or have suggestions for improvements, please open an issue.
 
-## This project is licensed under the MIT License.
+## License
+
+This project is licensed under the MIT License.
