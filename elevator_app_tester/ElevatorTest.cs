@@ -2,12 +2,14 @@ using elevator_app.Classes;
 using NUnit.Framework;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using elevator_app.Enums;
+using System.Drawing;
 
 namespace elevator_app_tester
 {
     [TestClass]
     public class ElevatorTest
     {
+        public static BuildingManager elevatorManager = new BuildingManager(4);
         public static Passenger elevator = new Passenger(1, 0, false, Direction.stationary, 0, 12, false, true, true, 10);
 
         [Test]
@@ -35,10 +37,10 @@ namespace elevator_app_tester
             buildingManager.elevators[3].CurrentFloor = 9;
 
             // Act
-            buildingManager.CallElevator(5, 2);
+            buildingManager.CallElevator(5, 2, 8);
 
             // Assert
-            Microsoft.VisualStudio.TestTools.UnitTesting.Assert.IsTrue(buildingManager.elevators.Any(e => e.CurrentFloor == 5)); // Elevator with floor 4 should be called
+            Microsoft.VisualStudio.TestTools.UnitTesting.Assert.IsTrue(buildingManager.elevators.Any(e => e.CurrentFloor == 8)); // Elevator with floor 4 should be called
         }
 
         [Test]
@@ -71,7 +73,6 @@ namespace elevator_app_tester
             // Assert
             Microsoft.VisualStudio.TestTools.UnitTesting.Assert.AreEqual(0, buildingManager.callQueue.Count); // Queue should be empty after processing
         }
-
 
     }
 }

@@ -30,6 +30,10 @@ namespace elevator_app.Classes
                 CurrentCapacity += numPassengers;
                 if (LogMovement)
                     Console.WriteLine($"{numPassengers} passengers entered elevator {ElevatorNumber}.");
+                   
+
+
+
 
                 // Set destination After adding
                 this.DestinationFloor = destinationFloor;
@@ -43,7 +47,8 @@ namespace elevator_app.Classes
                 CloseDoor(null);
 
 
-                if (CurrentFloor != DestinationFloor) {
+                if (CurrentFloor != DestinationFloor) 
+                {
                    
                     MoveTo(DestinationFloor); // Move elevator to destination floor
                 }
@@ -81,7 +86,7 @@ namespace elevator_app.Classes
             IsMoving = false;
             DestinationFloor = randomFloor; // Assign the random floor as the destination floor
             if (LogMovement)
-                Console.WriteLine($"Elevator {ElevatorNumber} selected destination floor {randomFloor}.");
+                Console.WriteLine($"Elevator {ElevatorNumber} Moving to floor {randomFloor}.");
 
         }
 

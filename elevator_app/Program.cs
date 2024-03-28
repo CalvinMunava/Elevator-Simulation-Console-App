@@ -35,14 +35,14 @@ namespace elevator_app
                     DisplayCommandKey();
 
                     // Start Simulation Thread
-                    //SimulateMovementThread.Start();
+                    SimulateMovementThread.Start();
 
                     // Start User Input Listen Thread
                     UserInputThread.Start();
 
                     // Start Queue Processing
-                    //StartQueueThread.Start();
-
+                    StartQueueThread.Start();
+                     
 
                 }
                 else
@@ -166,31 +166,54 @@ namespace elevator_app
         }
 
         // Default Elevator Movement Threads
-        static void SimulateElevatorMovement()
+        static async Task SimulateElevatorMovement()
         {
+            List<Task> tasks = new List<Task>();
             foreach (Elevator elevator in elevatorManager.elevators)
             {
-                Task.Run(() => MoveElevator(elevator));
+                tasks.Add(MoveElevator(elevator));
             }
+
+            // Wait for all elevator movements to complete
+            await Task.WhenAll(tasks);
         }
+
+        private static readonly object destinationLock = new object();
         static async Task MoveElevator(Elevator elevator)
         {
-            Random random = new Random();
+            
             while (true)
             {
                 if (!elevator.IsMoving && elevator.CurrentCapacity == 0)
                 {
-                    // Set direction to stationary when elevator is not moving
-                    elevator.Direction = Direction.stationary;
+                    lock (elevator) // Lock elevator object to prevent race conditions
+                    {
+                        // Set direction to stationary when elevator is not moving
+                        elevator.Direction = Direction.stationary;
 
-                    int randomFloor = random.Next(1, 16); // Random floor between 1 and 15
-                    int randomUsers = random.Next(1, 12); // Random floor between 1 and 12
-                    int randomDestination = random.Next(1, 12); // Random floor between 1 and 12
-                    elevator.MoveTo(randomFloor);
-                    elevator.AddTo(randomUsers, randomDestination);
-                    elevator.RemoveFrom(elevator.CurrentCapacity);
+                        lock (destinationLock)
+                        {
+                            if (elevator.destinationFloors.Count > 0)
+                            {
+                                // Process the next pending call in the queue
+                                int nextFloor = elevator.destinationFloors[0];
+                                elevator.MoveTo(nextFloor);
+                                elevator.destinationFloors.RemoveAt(0);
+                            }
+                            else
+                            {
+                                Random random = new Random();
+                                int randomFloor = random.Next(1, 16); // Random floor between 1 and 15
+                                int randomUsers = random.Next(1, 12); // Random floor between 1 and 12
+                                int randomDestination = random.Next(1, 12); // Random floor between 1 and 12
+                                elevator.MoveTo(randomFloor);
+                                elevator.AddTo(randomUsers, randomDestination);
+                                elevator.RemoveFrom(elevator.CurrentCapacity);
+                            }
+                        }
+                    }
                 }
-                Thread.Sleep(1500); // Delay for 1.5 Seconds                                
+                await Task.Delay(1500);// Delay for 0.1 Seconds                                
             }
         }     
         static void ProcessQueue()

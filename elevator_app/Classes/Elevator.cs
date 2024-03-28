@@ -10,7 +10,7 @@ namespace elevator_app.Classes
     public abstract class Elevator
     {
 
-        protected List<int> destinationFloors = new List<int>();
+        public List<int> destinationFloors = new List<int>();
         private Timer doorTimer;
 
         // Properties  
@@ -76,116 +76,83 @@ namespace elevator_app.Classes
 
         public void MoveTo(int targetFloor)
         {
-            if (targetFloor < 0 || targetFloor > 15)
+            lock (this) // Lock the elevator object to prevent concurrent modifications
             {
-                if (LogMovement)
-                    Console.WriteLine($"Invalid floor requested: {targetFloor}");
-                return;
-            }
-
-
-            if (targetFloor == CurrentFloor)
-            {
-                if (LogMovement)
-                    Console.WriteLine($"Elevator {ElevatorNumber} is already on floor {CurrentFloor}.");
-                return;
-            }
-
-            //if (targetFloor > CurrentFloor)
-            //{
-            //    Direction = Direction.up;
-            //    if (LogMovement)
-            //        Console.WriteLine($"Elevator {ElevatorNumber} is moving up from floor {CurrentFloor} to floor {targetFloor}.");
-            //}
-            //else
-            //{
-            //    Direction = Direction.down;
-            //    if (LogMovement)
-            //        Console.WriteLine($"Elevator {ElevatorNumber} is moving down from floor {CurrentFloor} to floor {targetFloor}.");
-            //}
-
-
-            // Determine direction of movement
-            Direction = targetFloor > CurrentFloor ? Direction.up : Direction.down;
-            IsMoving = true;
-
-            // Simulate elevator movement
-            while (IsMoving)
-            {
-                // Simulate movement delay
-                Thread.Sleep(1000);
-
-                // Move the elevator
-                if (Direction == Direction.up)
+                if (targetFloor < 0 || targetFloor > 15)
                 {
-                    //CurrentFloor++;
-                    //if (CurrentFloor == 0) // Handle ground floor
-                    //{
-                    //    if (LogMovement)
-                    //    {
-                    //        Console.WriteLine($"Elevator {ElevatorNumber} has reached the ground floor.");
-                    //        IsMoving = false;
-                    //    }
-                    //}
-                    if (CurrentFloor < targetFloor)
-                    {
-                        CurrentFloor++;
-                    }
-                    else if (CurrentFloor > targetFloor) // If somehow the elevator passed the target floor
-                    {
-                        CurrentFloor--;
-                    }
-                    else // Reached the target floor
-                    {
-                        IsMoving = false;
-                        Direction = Direction.stationary;
-                    }
+                    if (LogMovement)
+                        Console.WriteLine($"Invalid floor requested: {targetFloor}");
+                    return;
                 }
-                else if(Direction == Direction.down)
+
+
+                if (targetFloor == CurrentFloor)
                 {
-                    //CurrentFloor--;
-                    //if (CurrentFloor < 0) // Ensure elevator doesn't move below the ground floor
-                    //{
-                    //    if (LogMovement)
-                    //    {
-                    //        Console.WriteLine($"Elevator {ElevatorNumber} cannot move below the ground floor.");
-                    //        CurrentFloor = 0; // Reset to ground floor
-                    //        IsMoving = false;
-                    //    }
-                    //}
-                    if (CurrentFloor > targetFloor)
+                    if (LogMovement)
+                        Console.WriteLine($"Elevator {ElevatorNumber} is already on floor {CurrentFloor}.");
+                    return;
+                }
+
+                // Determine direction of movement
+                Direction = targetFloor > CurrentFloor ? Direction.up : Direction.down;
+                IsMoving = true;
+
+                // Simulate elevator movement
+                while (IsMoving)
+                {
+                    // Simulate movement delay
+                    Thread.Sleep(1000);
+
+                    // Move the elevator
+                    if (Direction == Direction.up)
                     {
-                        CurrentFloor--;
+                        if (CurrentFloor < targetFloor)
+                        {
+                            CurrentFloor++;
+                        }
+                        else if (CurrentFloor > targetFloor) // If somehow the elevator passed the target floor
+                        {
+                            CurrentFloor--;
+                        }
+                        else // Reached the target floor
+                        {
+                            IsMoving = false;
+                            Direction = Direction.stationary;
+                        }
                     }
-                    else if (CurrentFloor < targetFloor) // If somehow the elevator passed the target floor
+                    else if (Direction == Direction.down)
                     {
-                        CurrentFloor++;
+                        if (CurrentFloor > targetFloor)
+                        {
+                            CurrentFloor--;
+                        }
+                        else if (CurrentFloor < targetFloor) // If somehow the elevator passed the target floor
+                        {
+                            CurrentFloor++;
+                        }
+                        else // Reached the target floor
+                        {
+                            IsMoving = false;
+                            Direction = Direction.stationary;
+                        }
                     }
-                    else // Reached the target floor
+
+                    // Log movement
+                    if (LogMovement)
                     {
-                        IsMoving = false;
-                        Direction = Direction.stationary;
+                        Console.WriteLine($"Elevator {ElevatorNumber} is on floor {CurrentFloor}...");
                     }
                 }
 
-                // Log movement
                 if (LogMovement)
                 {
-                    Console.WriteLine($"Elevator {ElevatorNumber} is on floor {CurrentFloor}...");
+                    Console.WriteLine($"Elevator {ElevatorNumber} has arrived at floor {CurrentFloor}.");
                 }
+
+                OpenDoor();
+
             }
 
-            if (LogMovement)
-            {
-                Console.WriteLine($"Elevator {ElevatorNumber} has arrived at floor {CurrentFloor}.");
-            }
-
-            OpenDoor();
-
-            if (CurrentCapacity > 0)
-            {
-                RemoveFrom(CurrentCapacity);
-            }
 
         }
 
